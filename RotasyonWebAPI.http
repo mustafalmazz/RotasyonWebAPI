@@ -1,0 +1,6 @@
+@RotasyonWebAPI_HostAddress = http://localhost:5294
+
+GET {{RotasyonWebAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

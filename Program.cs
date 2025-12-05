@@ -1,4 +1,7 @@
 
+using Microsoft.EntityFrameworkCore;
+using RotasyonWebAPI.Data;
+
 namespace RotasyonWebAPI
 {
     public class Program
@@ -7,8 +10,19 @@ namespace RotasyonWebAPI
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
+            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowReactApp",
+                    b => b
+                        .WithOrigins("http://localhost:5173") // Senin Frontend adresin
+                        .AllowAnyMethod()
+                        .AllowAnyHeader());
+            });
+
+            builder.Services.AddDbContext<AppDbContext>(options =>
+             options.UseSqlServer(connectionString));
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
@@ -24,6 +38,7 @@ namespace RotasyonWebAPI
             }
 
             app.UseHttpsRedirection();
+            app.UseCors("AllowReactApp");
 
             app.UseAuthorization();
 
@@ -34,3 +49,4 @@ namespace RotasyonWebAPI
         }
     }
 }
+
